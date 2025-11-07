@@ -5,7 +5,7 @@ This repository contains the code related to an FNO approach to filling in Line-
 
 Work flow for a FNO from main.py.
 
-The general idea is to bbias correct the model output to observations where they are available.
+The general idea is to bias correct the model output to observations where they are available.
 
 Notes
 The code currently uses a single variable (temperature) and static variables (ex. bathymetry, depth ...) to predict a single target variable (observe temperature from ctds).
