@@ -15,7 +15,7 @@ You can select a subset of the stations for testing.
 ## Data processing
 In main.py the "prepare_data" function
 
-Loads the target observations (Line P ctd observations, files LineP_ctds_YYYY_binned_1m.csv, function load_ctd_data).
+Loads the target observations (Line P ctd observations, function load_ctd_data, in the proto type only 4 depth points are loaded).
 Loads the model data predictors (For now synthetic lineP data is generated in place of real model data).
 Splits the the data into training, validation and testings sets.
 Normalizes all sets of data with scaling parameters computed from only the training set (scale_params.json files are saved with the scaling parameters to denormalize later).
