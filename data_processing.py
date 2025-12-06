@@ -14,13 +14,13 @@ import json
 
 from pathlib import Path
 
-def load_ctd_data(ctd_data_file, start_year, end_year):
+def load_ctd_data(data_dir, start_year, end_year):
     """
     Load and process CTD csv files for a given year range.
     Returns an xarray.Dataset with dimensions (depth, station, time)).
     """
-    
-    df_all = pd.read_csv(data_dir, comment="#")
+    ctd_filename = data_dir / "lineP_ctds" / "lineP_CTD_training.csv"
+    df_all = pd.read_csv(ctd_filename, comment="#")
 
     df_all["TIME"] = pd.to_datetime(df_all["TIME"], format="%Y-%m-%d %H:%M:%S")
     df_all = df_all.rename(
@@ -217,23 +217,19 @@ def prepare_data(
 
 ):
 
-    #work_dir = "/home/rlc001/data/ppp5/analysis/stat_downscaling-workshop"
-    #year_range = (1999, 2000)
-    #variable = "Temperature"
-    #stations = ["P22", "P23", "P24", "P25", "P26"]
-    #depths = [0.5, 10.5, 50.5, 100.5]
 
-    ctd_filename = data_dir / "lineP_CTD_training.csv"
+    
     start_year, end_year = year_range
-    ds = load_ctd_data(ctd_filename, start_year, end_year)
+    ds = load_ctd_data(data_dir, start_year, end_year)
 
     # Subset stations and depths
     #print(ds.station.values)
     if stations is not None:
-        station_numbers = [s.lstrip("P") for s in stations]
-        print(station_numbers)
-        print(ds.station)
-        ds = ds.sel(station=station_numbers)
+        # station_numbers = [s.lstrip("P") for s in stations]
+        # print(station_numbers)
+        # print(ds.station)
+        print(f'selecting stations {stations}')
+        ds = ds.sel(station=stations)
 
     #### For now to test but to be removed later ####
     print('==========================================================\n'+
@@ -295,7 +291,7 @@ def prepare_data(
     # Compute scale parameters from training data and apply to validation and test
     ds_input_train_norm, scale_params_in = normalize_dataset(ds_input_train)
     # Save input normalization parameters
-    with open(f"{work_dir}/scale_params_in.json", "w") as f:
+    with open(work_dir / f"scale_params_in.json", "w") as f:
         json.dump(scale_params_in, f, indent=2)
 
     # Apply same normalization to validation & test inputs
@@ -304,7 +300,7 @@ def prepare_data(
 
     ds_target_train_norm, scale_params_target = normalize_dataset(ds_target_train)
     # Save target normalization parameters
-    with open(f"{work_dir}/scale_params_target.json", "w") as f:
+    with open(work_dir/ f"scale_params_target.json", "w") as f:
         json.dump(scale_params_target, f, indent=2)
 
     # Apply same normalization to validation & test targets

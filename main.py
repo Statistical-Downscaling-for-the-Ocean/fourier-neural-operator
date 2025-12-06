@@ -32,10 +32,17 @@ def main(output_dir, data_dir):
     # main_dir = "/fs/site5/eccc/crd/ccrn/users/rpg002/stat_downscaling-workshop/FNO"
     # data_dir = "/fs/site5/eccc/crd/ccrn/users/rpg002/stat_downscaling-workshop/data" 
     
-    main_dir = "/path/to/my/projects/line_p/"
-    data_dir = "/path/to/my/projects/line_p/data/observation"
+    # main_dir = "/path/to/my/projects/line_p/"
+    # data_dir = "/path/to/my/projects/line_p/data/observation"
+
+    now = datetime.now()
+    formatted = now.strftime("%Y-%m-%d-%H:%M")
+
+    print(f'Started run with id : {formatted}')
+    work_dir = output_dir / f'{formatted}'
+    Path(work_dir).mkdir(parents=True, exist_ok=True)
     
-    data_dir = Path(data_dir)
+    # data_dir = Path(data_dir)
     
     # === Prepare Data ===
     train_data, val_data, test_data, stations, depths = prepare_data(
@@ -50,12 +57,12 @@ def main(output_dir, data_dir):
 
     # === Train Model ===
     try: ##Changed
-        save_path = f"{work_dir}/best_model.pt"
+        save_path = work_dir / f"best_model.pth"
         model = train_model(train_data, val_data, width = 20, num_layers = 1, modes1 = None, modes2 = None, batch_size = 2, n_epochs=200, lr=1e-3, wd=1e-5, reduction = 'mean_snap', save_path=save_path) ##Changed
     except Exception as e: ##Changed
         import shutil  ##Changed
-        Path(output_dir + '/failed_cases').mkdir(parents=True, exist_ok=True)  ##Changed
-        shutil.move(work_dir, output_dir + '/failed_cases')  ##Changed
+        Path(output_dir / 'failed_cases').mkdir(parents=True, exist_ok=True)  ##Changed
+        shutil.move(work_dir, output_dir / 'failed_cases')  ##Changed
         print("Terminated due to the follwoing error:\n", e)  ##Changed
         raise  #
 
