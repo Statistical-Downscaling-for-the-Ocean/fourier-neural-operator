@@ -91,8 +91,8 @@ def main(output_dir, data_dir, n_epochs, batch_size, lr , wd, reduction, early_s
 
     # === Plot learning curves ===
     fig, ax = plt.subplots(1,1, figsize=(8,5))
-    ax.plot(np.arange(1,(n_epochs)+1), train_losses.cpu().numpy(), color = 'b', label = 'train loss')
-    ax.plot(np.arange(1,(n_epochs)+1), val_losses.cpu().numpy(), color = 'g', label = 'validation loss')
+    ax.plot(np.arange(1,(n_epochs)+1), train_losses, color = 'b', label = 'train loss')
+    ax.plot(np.arange(1,(n_epochs)+1), val_losses, color = 'g', label = 'validation loss')
     ax.set_title(f'Train/Val Loss - best validation score : {best_val_mse}') ###
     ax.set_xlabel('Epoch')
     ax.set_ylabel(f'Loss :MSE - reduction : {"mean_snap"}')
@@ -105,7 +105,8 @@ def main(output_dir, data_dir, n_epochs, batch_size, lr , wd, reduction, early_s
     input_test, target_test, mask_test = test_data
     test_data = make_snapshot_data(input_test, target_test, mask_test)
     test_loader = DataLoader(test_data, batch_size=1, shuffle=False)
-
+    
+    
     _ = evaluate_model(
         model,
         test_loader,
