@@ -101,7 +101,7 @@ def main(output_dir, data_dir, n_epochs, batch_size, lr , wd, reduction, early_s
     plt.savefig(work_dir / f'train_val_learning_curves.png')
     plt.close()
     # === Evaluate Model ===
-    model.load_state_dict(torch.load(save_path))
+    model.load_state_dict(torch.load(save_path, map_location=torch.device('cpu')))
     input_test, target_test, mask_test = test_data
     test_data = make_snapshot_data(input_test, target_test, mask_test)
     test_loader = DataLoader(test_data, batch_size=1, shuffle=False)
